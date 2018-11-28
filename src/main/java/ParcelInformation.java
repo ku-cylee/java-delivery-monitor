@@ -1,5 +1,7 @@
 import com.google.gson.*;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ParcelInformation {
@@ -23,6 +25,24 @@ public class ParcelInformation {
         completed = parcelObject.get("complete").getAsBoolean();
         parcelObject.get("trackingDetails").getAsJsonArray()
                     .forEach(statusElement -> statusList.add(new ParcelStatus(statusElement)));
+    }
+
+    public ParcelInformation(ResultSet resultSet) {
+        try {
+            parcelName = resultSet.getString("parcel_name");
+            invoiceNumber = resultSet.getString("invoice_number");
+            receiverName = resultSet.getString("receiver_name");
+            receiverAddress = resultSet.getString("receiver_address");
+            senderName = resultSet.getString("sender_name");
+            completed = (resultSet.getInt("completed") != 0);
+        } catch (SQLException e) {
+            // no expected exception
+        }
+    }
+
+    public ParcelInformation(ResultSet resultSet, ArrayList<ParcelStatus> statusList) {
+        this(resultSet);
+        this.statusList = statusList;
     }
 
     @Override

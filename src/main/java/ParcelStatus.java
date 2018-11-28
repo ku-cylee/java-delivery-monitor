@@ -1,5 +1,7 @@
 import com.google.gson.*;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -20,6 +22,17 @@ public class ParcelStatus {
         }
         location = statusObject.get("where").getAsString();
         category = statusObject.get("kind").getAsString();
+    }
+
+    public ParcelStatus(ResultSet resultSet) {
+        try {
+            String timeString = resultSet.getString("status_time");
+            statusTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA).parse(timeString);
+            location = resultSet.getString("location");
+            category = resultSet.getString("category");
+        } catch (Exception e) {
+            // exception
+        }
     }
 
     @Override
