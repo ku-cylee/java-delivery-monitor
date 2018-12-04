@@ -170,18 +170,19 @@ public class DatabaseHandler {
 
         int maxId = Collections.max(parcelIdList);
 
-        String statusSql = "INSERT INTO parcel_status (parcel_id, status_time, location, category)\n" +
-                           "VALUES (?, ?, ?, ?)";
+        for (ParcelStatus status:parcel.statusList) insertParcelStatus(maxId, status);
+    }
 
-        for (ParcelStatus parcelStatus:parcel.statusList) {
-            java.util.Date statusTime = parcelStatus.statusTime;
-            PreparedStatement statusPstmt = connection.prepareStatement(statusSql);
-            statusPstmt.setInt(1, maxId);
-            statusPstmt.setString(2, new SimpleDateFormat("yyyy. MM. dd. HH:mm:ss").format(statusTime));
-            statusPstmt.setString(3, parcelStatus.location);
-            statusPstmt.setString(4, parcelStatus.category);
-            statusPstmt.executeUpdate();
-        }
+    public void insertParcelStatus(int parcelId, ParcelStatus status) throws SQLException {
+        String sql = "INSERT INTO parcel_status (parcel_id, status_time, location, category)\n" +
+                "VALUES (?, ?, ?, ?)";
+
+        PreparedStatement pstmt = connection.prepareStatement(sql);
+        pstmt.setInt(1, parcelId);
+        pstmt.setString(2, status.getTimeString());
+        pstmt.setString(3, status.location);
+        pstmt.setString(4, status.category);
+        pstmt.executeUpdate();
     }
 
     public void updateParcelStatus(int parcelId, ParcelInformation newParcel) throws SQLException {
@@ -193,26 +194,18 @@ public class DatabaseHandler {
             if (originalParcel.statusList.size() == newParcel.statusList.size()) {
                 // no update
             } else {
-                String sql = "INSERT INTO parcel_status (parcel_id, status_time, location, category)\n" +
-                             "VALUES (?, ?, ?, ?)";
-
-                PreparedStatement pstmt = connection.prepareStatement(sql);
 
                 for (int idx = originalParcel.statusList.size(); idx < newParcel.statusList.size(); idx++) {
                     ParcelStatus status = newParcel.statusList.get(idx);
 
-                    pstmt.setInt(1, parcelId);
-                    pstmt.setString(2, status.getTimeString());
-                    pstmt.setString(3, status.location);
-                    pstmt.setString(4, status.category);
-                    pstmt.executeUpdate();
+                    insertParcelStatus(parcelId, status);
                 }
 
                 if (newParcel.completed) {
-                    sql = "UPDATE parcel_status\n" +
+                    String sql = "UPDATE parcel_status\n" +
                           "SET completed = 1\n" +
                           "WHERE parcel_id = ?";
-                    pstmt = connection.prepareStatement(sql);
+                    PreparedStatement pstmt = connection.prepareStatement(sql);
                     pstmt.setInt(1, parcelId);
                     pstmt.executeUpdate();
                 }
