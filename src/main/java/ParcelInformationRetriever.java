@@ -1,6 +1,7 @@
 import com.google.gson.*;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -14,51 +15,40 @@ public class ParcelInformationRetriever {
         this.key = key;
     }
 
-    public HashMap<Integer, String> getCompanyMap() {
-        HashMap<Integer, String> companyMap = new HashMap<>();
+    public ArrayList<Company> getCompanyData() throws IOException {
+        ArrayList<Company> companyList = new ArrayList<>();
 
-        try {
-            URL url = new URL(baseUrl + "companylist?t_key=" + key);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
+        URL url = new URL(baseUrl + "companylist?t_key=" + key);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
 
-            BufferedReader bReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
+        BufferedReader bReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+        while ((inputLine = bReader.readLine()) != null) response.append(inputLine);
+        bReader.close();
 
-            while ((inputLine = bReader.readLine()) != null) response.append(inputLine);
-
-            bReader.close();
-
-            JsonObject jsonObject = new JsonParser().parse(response.toString()).getAsJsonObject();
-
-            for (JsonElement companyElement:jsonObject.getAsJsonArray("Company")) {
-                JsonObject companyObject = companyElement.getAsJsonObject();
-                companyMap.put(companyObject.get("Code").getAsInt(), companyObject.get("Name").getAsString());
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        JsonObject jsonObject = new JsonParser().parse(response.toString()).getAsJsonObject();
+        for (JsonElement companyElement:jsonObject.getAsJsonArray("Company")) {
+            companyList.add(new Company(companyElement));
         }
 
-        return companyMap;
+        return companyList;
     }
 
-    public ParcelInformation updateParcelInformation(String companyCode, String invoiceId) {
-        try {
-            URL url = new URL(baseUrl + "trackingInfo?t_key=" + key + "&t_code=" + companyCode + "&t_invoice=" + invoiceId);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
+    public ParcelInformation getParcelInformation(String companyCode, String invoiceId) throws IOException {
+        URL url = new URL(baseUrl + "trackingInfo?t_key=" + key + "&t_code=" + companyCode + "&t_invoice=" + invoiceId);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
 
-            BufferedReader bReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
+        BufferedReader bReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
 
-            while ((inputLine = bReader.readLine()) != null) response.append(inputLine);
+        while ((inputLine = bReader.readLine()) != null) response.append(inputLine);
 
-            bReader.close();
-            return new ParcelInformation(response.toString());
-        } catch (Exception e) {
-            return null;
-        }
+        bReader.close();
+        return new ParcelInformation(response.toString());
+        // how to get company object when generating parcel info?
     }
 }

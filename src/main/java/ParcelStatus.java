@@ -7,9 +7,9 @@ import java.util.Date;
 import java.util.Locale;
 
 public class ParcelStatus {
-    private Date statusTime;
-    private String location;
-    private String category;
+    public Date statusTime;
+    public String location;
+    public String category;
 
     public ParcelStatus(JsonElement statusElement) {
         JsonObject statusObject = statusElement.getAsJsonObject();
@@ -24,7 +24,7 @@ public class ParcelStatus {
         category = statusObject.get("kind").getAsString();
     }
 
-    public ParcelStatus(ResultSet resultSet) {
+    public ParcelStatus(ResultSet resultSet) throws SQLException {
         try {
             String timeString = resultSet.getString("status_time");
             statusTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA).parse(timeString);
@@ -38,9 +38,13 @@ public class ParcelStatus {
     @Override
     public String toString() {
         String LF = "\n";
-        String result = "## " + new SimpleDateFormat("yyyy. MM. dd. HH:mm:ss").format(statusTime) + LF;
+        String result = "## " + getTimeString() + LF;
         result += String.format("## [%s] %s", category, location);
 
         return result;
+    }
+
+    public String getTimeString() {
+        return new SimpleDateFormat("yyyy. MM. dd. HH:mm:ss").format(statusTime);
     }
 }
