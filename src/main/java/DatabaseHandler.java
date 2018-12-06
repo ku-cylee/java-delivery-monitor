@@ -189,24 +189,22 @@ public class DatabaseHandler {
 
         if (originalParcel == null) {
             // such parcel does not exist
+        } else if (originalParcel.statusList.size() == newParcel.statusList.size() || !originalParcel.completed) {
+            // no update
         } else {
-            if (originalParcel.statusList.size() == newParcel.statusList.size() || !originalParcel.completed) {
-                // no update
-            } else {
 
-                for (int idx = originalParcel.statusList.size(); idx < newParcel.statusList.size(); idx++) {
-                    ParcelStatus status = newParcel.statusList.get(idx);
-                    insertParcelStatus(parcelId, status);
-                }
+            for (int idx = originalParcel.statusList.size(); idx < newParcel.statusList.size(); idx++) {
+                ParcelStatus status = newParcel.statusList.get(idx);
+                insertParcelStatus(parcelId, status);
+            }
 
-                if (newParcel.completed) {
-                    String sql = "UPDATE parcel_status\n" +
-                          "SET completed = 1\n" +
-                          "WHERE parcel_id = ?";
-                    PreparedStatement pstmt = connection.prepareStatement(sql);
-                    pstmt.setInt(1, parcelId);
-                    pstmt.executeUpdate();
-                }
+            if (newParcel.completed) {
+                String sql = "UPDATE parcel_status\n" +
+                             "SET completed = 1\n" +
+                             "WHERE parcel_id = ?";
+                PreparedStatement pstmt = connection.prepareStatement(sql);
+                pstmt.setInt(1, parcelId);
+                pstmt.executeUpdate();
             }
         }
     }
