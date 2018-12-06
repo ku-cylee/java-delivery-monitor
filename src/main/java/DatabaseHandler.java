@@ -1,7 +1,6 @@
 import java.io.File;
 import java.nio.file.*;
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class DatabaseHandler {
@@ -148,20 +147,20 @@ public class DatabaseHandler {
     }
 
     public void insertParcelInformation(ParcelInformation parcel) throws SQLException {
-        String infoSql = "INSERT INTO parcel_information " +
-                         "(parcel_name, company_id, invoice_number, receiver_name, " +
-                         "receiver_address, sender_name, completed)\n" +
-                         "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO parcel_information " +
+                     "(parcel_name, company_id, invoice_number, receiver_name, " +
+                     "receiver_address, sender_name, completed)\n" +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        PreparedStatement infoPstmt = connection.prepareStatement(infoSql);
-        infoPstmt.setString(1, parcel.parcelName);
-        infoPstmt.setInt(2, parcel.company.id);
-        infoPstmt.setString(3, parcel.invoiceNumber);
-        infoPstmt.setString(4, parcel.receiverName);
-        infoPstmt.setString(5, parcel.receiverAddress);
-        infoPstmt.setString(6, parcel.senderName);
-        infoPstmt.setInt(7, parcel.completed ? 1 : 0);
-        infoPstmt.executeUpdate();
+        PreparedStatement pstmt = connection.prepareStatement(sql);
+        pstmt.setString(1, parcel.parcelName);
+        pstmt.setInt(2, parcel.company.id);
+        pstmt.setString(3, parcel.invoiceNumber);
+        pstmt.setString(4, parcel.receiverName);
+        pstmt.setString(5, parcel.receiverAddress);
+        pstmt.setString(6, parcel.senderName);
+        pstmt.setInt(7, parcel.completed ? 1 : 0);
+        pstmt.executeUpdate();
 
         ResultSet rs = statement.executeQuery("SELECT id FROM parcel_information");
 
@@ -175,7 +174,7 @@ public class DatabaseHandler {
 
     public void insertParcelStatus(int parcelId, ParcelStatus status) throws SQLException {
         String sql = "INSERT INTO parcel_status (parcel_id, status_time, location, category)\n" +
-                "VALUES (?, ?, ?, ?)";
+                     "VALUES (?, ?, ?, ?)";
 
         PreparedStatement pstmt = connection.prepareStatement(sql);
         pstmt.setInt(1, parcelId);
@@ -191,13 +190,12 @@ public class DatabaseHandler {
         if (originalParcel == null) {
             // such parcel does not exist
         } else {
-            if (originalParcel.statusList.size() == newParcel.statusList.size()) {
+            if (originalParcel.statusList.size() == newParcel.statusList.size() || !originalParcel.completed) {
                 // no update
             } else {
 
                 for (int idx = originalParcel.statusList.size(); idx < newParcel.statusList.size(); idx++) {
                     ParcelStatus status = newParcel.statusList.get(idx);
-
                     insertParcelStatus(parcelId, status);
                 }
 
