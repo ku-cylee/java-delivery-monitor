@@ -7,9 +7,9 @@ import java.util.Date;
 import java.util.Locale;
 
 public class ParcelStatus {
-    public Date statusTime;
-    public String location;
-    public String category;
+    private Date statusTime;
+    private String location;
+    private String category;
 
     public ParcelStatus(JsonElement statusElement) {
         JsonObject statusObject = statusElement.getAsJsonObject();
@@ -44,7 +44,19 @@ public class ParcelStatus {
         return result;
     }
 
+    public Date getStatusTime() {
+        return statusTime;
+    }
+
     public String getTimeString() {
         return new SimpleDateFormat("yyyy. MM. dd. HH:mm:ss").format(statusTime);
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getCategory() {
+        return category;
     }
 }

@@ -5,14 +5,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ParcelInformation {
-    public boolean completed;
-    public String parcelName;
-    public String invoiceNumber;
-    public String receiverName;
-    public String receiverAddress;
-    public String senderName;
-    public ArrayList<ParcelStatus> statusList = new ArrayList<>();
-    public Company company;
+    private boolean completed;
+    private String parcelName;
+    private String invoiceNumber;
+    private String receiverName;
+    private String receiverAddress;
+    private String senderName;
+    private ArrayList<ParcelStatus> statusList = new ArrayList<>();
+    private Company company;
 
     public ParcelInformation(String jsonText) {
         JsonObject parcelObject = new JsonParser().parse(jsonText).getAsJsonObject();
@@ -68,5 +68,37 @@ public class ParcelInformation {
                  "============================================";
 
         return result;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public String getParcelName() {
+        return parcelName;
+    }
+
+    public String getInvoiceNumber() {
+        return invoiceNumber;
+    }
+
+    public String getReceiverName() {
+        return receiverName;
+    }
+
+    public String getReceiverAddress() {
+        return receiverAddress;
+    }
+
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public ArrayList<ParcelStatus> getStatusList() {
+        return statusList;
     }
 }

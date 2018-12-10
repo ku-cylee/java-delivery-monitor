@@ -61,8 +61,8 @@ public class DatabaseHandler {
 
         for (Company company:companyList) {
             PreparedStatement pstmt = connection.prepareStatement(sql);
-            pstmt.setString(1 ,company.companyCode);
-            pstmt.setString(2, company.companyName);
+            pstmt.setString(1 ,company.getCompanyCode());
+            pstmt.setString(2, company.getCompanyName());
             pstmt.executeUpdate();
         }
     }
@@ -153,13 +153,13 @@ public class DatabaseHandler {
                      "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         PreparedStatement pstmt = connection.prepareStatement(sql);
-        pstmt.setString(1, parcel.parcelName);
-        pstmt.setInt(2, parcel.company.id);
-        pstmt.setString(3, parcel.invoiceNumber);
-        pstmt.setString(4, parcel.receiverName);
-        pstmt.setString(5, parcel.receiverAddress);
-        pstmt.setString(6, parcel.senderName);
-        pstmt.setInt(7, parcel.completed ? 1 : 0);
+        pstmt.setString(1, parcel.getParcelName());
+        pstmt.setInt(2, parcel.getCompany().getId());
+        pstmt.setString(3, parcel.getInvoiceNumber());
+        pstmt.setString(4, parcel.getReceiverName());
+        pstmt.setString(5, parcel.getReceiverAddress());
+        pstmt.setString(6, parcel.getSenderName());
+        pstmt.setInt(7, parcel.isCompleted() ? 1 : 0);
         pstmt.executeUpdate();
 
         ResultSet rs = statement.executeQuery("SELECT id FROM parcel_information");
@@ -169,7 +169,7 @@ public class DatabaseHandler {
 
         int maxId = Collections.max(parcelIdList);
 
-        for (ParcelStatus status:parcel.statusList) insertParcelStatus(maxId, status);
+        for (ParcelStatus status:parcel.getStatusList()) insertParcelStatus(maxId, status);
     }
 
     public void insertParcelStatus(int parcelId, ParcelStatus status) throws SQLException {
@@ -179,26 +179,32 @@ public class DatabaseHandler {
         PreparedStatement pstmt = connection.prepareStatement(sql);
         pstmt.setInt(1, parcelId);
         pstmt.setString(2, status.getTimeString());
-        pstmt.setString(3, status.location);
-        pstmt.setString(4, status.category);
+        pstmt.setString(3, status.getLocation());
+        pstmt.setString(4, status.getCategory());
         pstmt.executeUpdate();
     }
 
     public void updateParcelStatus(int parcelId, ParcelInformation newParcel) throws SQLException {
         ParcelInformation originalParcel = getParcelInformation(parcelId);
 
+        boolean areSizesSame = false;
+
         if (originalParcel == null) {
             // such parcel does not exist
-        } else if (originalParcel.statusList.size() == newParcel.statusList.size() || !originalParcel.completed) {
+        } else {
+            areSizesSame = originalParcel.getStatusList().size() == newParcel.getStatusList().size();
+        }
+
+        if (areSizesSame || !originalParcel.isCompleted()) {
             // no update
         } else {
 
-            for (int idx = originalParcel.statusList.size(); idx < newParcel.statusList.size(); idx++) {
-                ParcelStatus status = newParcel.statusList.get(idx);
+            for (int idx = originalParcel.getStatusList().size(); idx < newParcel.getStatusList().size(); idx++) {
+                ParcelStatus status = newParcel.getStatusList().get(idx);
                 insertParcelStatus(parcelId, status);
             }
 
-            if (newParcel.completed) {
+            if (newParcel.isCompleted()) {
                 String sql = "UPDATE parcel_status\n" +
                              "SET completed = 1\n" +
                              "WHERE parcel_id = ?";

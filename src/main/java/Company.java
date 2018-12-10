@@ -5,9 +5,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Company {
-    public int id;
-    public String companyCode;
-    public String companyName;
+    private int id;
+    private String companyCode;
+    private String companyName;
 
     public Company(ResultSet resultSet) {
         try {
@@ -24,5 +24,17 @@ public class Company {
         id = 0;
         companyCode = jsonObject.get("Code").getAsString();
         companyName = jsonObject.get("Name").getAsString();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getCompanyCode() {
+        return companyCode;
+    }
+
+    public String getCompanyName() {
+        return companyName;
     }
 }
