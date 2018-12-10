@@ -83,7 +83,8 @@ public class ParcelInformationDAO extends DAO {
 
         int maxId = Collections.max(parcelIdList);
 
-        for (ParcelStatus status:parcel.getStatusList()) new ParcelStatusDAO().insertParcelStatus(maxId, status);
+        ParcelStatusDAO parcelStatusDAO = new ParcelStatusDAO();
+        for (ParcelStatus status:parcel.getStatusList()) parcelStatusDAO.insertParcelStatus(maxId, status);
     }
 
     public void updateCompleteness(int parcelId, boolean completed) throws SQLException {
