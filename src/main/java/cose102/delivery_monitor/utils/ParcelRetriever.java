@@ -24,7 +24,6 @@ public class ParcelRetriever {
 
         String response = getResponse(baseUrl + "companylist?t_key=" + key);
 
-        JsonObject jsonObject = new JsonParser().parse(response).getAsJsonObject();
         new JsonParser().parse(response.toString()).getAsJsonObject().getAsJsonArray("Company")
                         .forEach(companyElement -> companyList.add(new Company(companyElement)));
         return companyList;
