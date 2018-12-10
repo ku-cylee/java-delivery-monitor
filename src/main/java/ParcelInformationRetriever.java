@@ -29,10 +29,8 @@ public class ParcelInformationRetriever {
         bReader.close();
 
         JsonObject jsonObject = new JsonParser().parse(response.toString()).getAsJsonObject();
-        for (JsonElement companyElement:jsonObject.getAsJsonArray("Company")) {
-            companyList.add(new Company(companyElement));
-        }
-
+        new JsonParser().parse(response.toString()).getAsJsonObject().getAsJsonArray("Company")
+                        .forEach(companyElement -> companyList.add(new Company(companyElement)));
         return companyList;
     }
 
