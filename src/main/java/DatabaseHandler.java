@@ -26,7 +26,7 @@ public class DatabaseHandler {
     }
 
     public void initializeDatabase() throws SQLException {
-        String companyListsSql = "CREATE TABLE IF NOT EXISTS company_lists (\n" +
+        String companyListsSql = "CREATE TABLE IF NOT EXISTS company (\n" +
                                  "id INTEGER PRIMARY KEY,\n" +
                                  "code VARCHAR(5),\n" +
                                  "company VARCHAR(16)\n" +
@@ -57,7 +57,7 @@ public class DatabaseHandler {
     }
 
     public void insertCompanyLists(ArrayList<Company> companyList) throws SQLException {
-        String sql = "INSERT INTO company_list (code, company) VALUES (?, ?)";
+        String sql = "INSERT INTO company (code, company) VALUES (?, ?)";
 
         for (Company company:companyList) {
             PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -96,7 +96,7 @@ public class DatabaseHandler {
     public ArrayList<Company> getCompanyList() throws SQLException {
         ArrayList<Company> companyList = new ArrayList<>();
 
-        ResultSet rs = statement.executeQuery("SELECT * FROM company_list");
+        ResultSet rs = statement.executeQuery("SELECT * FROM company");
         while (rs.next()) companyList.add(new Company(rs));
 
         return companyList;
