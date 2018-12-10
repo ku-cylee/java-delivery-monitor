@@ -1,5 +1,6 @@
+package cose102.delivery_monitor.forms;
+
 import javax.swing.*;
-import java.awt.*;
 
 public class ParcelsPanel extends JPanel {
     public ParcelsPanel(MainFrame mainFrame) {

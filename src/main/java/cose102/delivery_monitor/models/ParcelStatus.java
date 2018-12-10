@@ -1,4 +1,7 @@
-import com.google.gson.*;
+package cose102.delivery_monitor.models;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

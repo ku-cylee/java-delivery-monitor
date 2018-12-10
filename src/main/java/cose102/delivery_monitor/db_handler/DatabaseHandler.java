@@ -1,7 +1,15 @@
+package cose102.delivery_monitor.db_handler;
+
+import cose102.delivery_monitor.models.Company;
+import cose102.delivery_monitor.models.ParcelInformation;
+import cose102.delivery_monitor.models.ParcelStatus;
+
 import java.io.File;
-import java.nio.file.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class DatabaseHandler {
     private Connection connection = null;
@@ -11,9 +19,9 @@ public class DatabaseHandler {
         Path dbFolder;
 
         if (System.getProperty("os.name").contains("Windows")) {
-            dbFolder = Paths.get(System.getenv("APPDATA"), "delivery_monitor");
+            dbFolder = Paths.get(System.getenv("APPDATA"), "cose102/delivery_monitor");
         } else {
-            dbFolder = Paths.get("/usr/share", "delivery_monitor");
+            dbFolder = Paths.get("/usr/share", "cose102/delivery_monitor");
         }
 
         new File(dbFolder.toString()).mkdirs();

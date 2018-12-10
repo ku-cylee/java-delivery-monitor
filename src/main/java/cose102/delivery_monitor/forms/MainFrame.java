@@ -1,13 +1,12 @@
+package cose102.delivery_monitor.forms;
+
 import java.awt.*;
 import javax.swing.*;
 
 public class MainFrame extends JFrame {
-    public DatabaseHandler dbHandler;
     public Color buttonColor = new Color(204, 204, 204);
 
-    public MainFrame(DatabaseHandler dbHandler) {
-        this.dbHandler = dbHandler;
-
+    public MainFrame() {
         this.setTitle("Example Frame");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

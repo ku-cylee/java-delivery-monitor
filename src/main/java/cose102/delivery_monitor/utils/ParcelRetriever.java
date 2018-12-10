@@ -1,4 +1,8 @@
+package cose102.delivery_monitor.utils;
+
 import com.google.gson.*;
+import cose102.delivery_monitor.models.Company;
+import cose102.delivery_monitor.models.ParcelInformation;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,11 +11,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
 
-public class ParcelInformationRetriever {
+public class ParcelRetriever {
     private String key;
     private String baseUrl = "http://info.sweettracker.co.kr/api/v1/";
 
-    public ParcelInformationRetriever(String key) {
+    public ParcelRetriever(String key) {
         this.key = key;
     }
 

@@ -1,3 +1,5 @@
+package cose102.delivery_monitor.forms;
+
 import javax.swing.*;
 
 public class StatusPanel extends JPanel {

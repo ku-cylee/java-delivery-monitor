@@ -1,3 +1,5 @@
+package cose102.delivery_monitor.models;
+
 import com.google.gson.*;
 
 import java.sql.ResultSet;

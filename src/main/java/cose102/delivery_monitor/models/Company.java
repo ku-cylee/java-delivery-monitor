@@ -1,3 +1,5 @@
+package cose102.delivery_monitor.models;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
