@@ -22,35 +22,30 @@ public class ParcelRetriever {
     public ArrayList<Company> getCompanyData() throws IOException {
         ArrayList<Company> companyList = new ArrayList<>();
 
-        URL url = new URL(baseUrl + "companylist?t_key=" + key);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
+        String response = getResponse(baseUrl + "companylist?t_key=" + key);
 
-        BufferedReader bReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
-        while ((inputLine = bReader.readLine()) != null) response.append(inputLine);
-        bReader.close();
-
-        JsonObject jsonObject = new JsonParser().parse(response.toString()).getAsJsonObject();
+        JsonObject jsonObject = new JsonParser().parse(response).getAsJsonObject();
         new JsonParser().parse(response.toString()).getAsJsonObject().getAsJsonArray("Company")
                         .forEach(companyElement -> companyList.add(new Company(companyElement)));
         return companyList;
     }
 
     public ParcelInformation getParcelInformation(String companyCode, String invoiceId) throws IOException {
-        URL url = new URL(baseUrl + "trackingInfo?t_key=" + key + "&t_code=" + companyCode + "&t_invoice=" + invoiceId);
+        String response = baseUrl + "trackingInfo?t_key=" + key + "&t_code=" + companyCode + "&t_invoice=" + invoiceId;
+        return new ParcelInformation(response);
+    }
+
+    private String getResponse(String urlString) throws IOException {
+        URL url = new URL(urlString);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
 
         BufferedReader bReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         String inputLine;
-        StringBuffer response = new StringBuffer();
-
+        StringBuilder response = new StringBuilder();
         while ((inputLine = bReader.readLine()) != null) response.append(inputLine);
-
         bReader.close();
-        return new ParcelInformation(response.toString());
-        // how to get company object when generating parcel info?
+
+        return response.toString();
     }
 }
