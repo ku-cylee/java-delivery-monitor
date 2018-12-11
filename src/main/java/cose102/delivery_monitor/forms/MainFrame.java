@@ -1,10 +1,12 @@
 package cose102.delivery_monitor.forms;
 
+import cose102.delivery_monitor.models.ParcelInformation;
+
 import java.awt.*;
+import java.util.ArrayList;
 import javax.swing.*;
 
 public class MainFrame extends JFrame {
-    public Color buttonColor = new Color(204, 204, 204);
 
     public MainFrame() {
         this.setTitle("Example Frame");
