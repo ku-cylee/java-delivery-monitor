@@ -1,6 +1,7 @@
 package cose102.delivery_monitor.models;
 
 import com.google.gson.*;
+import cose102.delivery_monitor.db_handler.DatabaseHandler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,7 +17,7 @@ public class ParcelInformation {
     private ArrayList<ParcelStatus> statusList = new ArrayList<>();
     private Company company;
 
-    public ParcelInformation(String jsonText) {
+    public ParcelInformation(String jsonText, String companyCode) {
         JsonObject parcelObject = new JsonParser().parse(jsonText).getAsJsonObject();
 
         parcelName = parcelObject.get("itemName").getAsString();
@@ -29,7 +30,11 @@ public class ParcelInformation {
         parcelObject.get("trackingDetails").getAsJsonArray()
                     .forEach(statusElement -> statusList.add(new ParcelStatus(statusElement)));
 
-
+        try {
+            company = DatabaseHandler.getInstance().getCompany(companyCode);
+        } catch (SQLException e) {
+            // no expected exception
+        }
     }
 
     public ParcelInformation(ResultSet resultSet) {

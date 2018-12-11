@@ -30,8 +30,9 @@ public class ParcelRetriever {
     }
 
     public ParcelInformation getParcelInformation(String companyCode, String invoiceId) throws IOException {
-        String response = baseUrl + "trackingInfo?t_key=" + key + "&t_code=" + companyCode + "&t_invoice=" + invoiceId;
-        return new ParcelInformation(response);
+        String urlString = baseUrl + "trackingInfo?t_key=" + key + "&t_code=" + companyCode + "&t_invoice=" + invoiceId;
+        String response = getResponse(urlString);
+        return new ParcelInformation(response, companyCode);
     }
 
     private String getResponse(String urlString) throws IOException {
