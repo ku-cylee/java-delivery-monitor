@@ -3,6 +3,7 @@ package cose102.delivery_monitor.db_handler;
 import cose102.delivery_monitor.models.Company;
 import cose102.delivery_monitor.models.ParcelInformation;
 import cose102.delivery_monitor.models.ParcelStatus;
+import cose102.delivery_monitor.utils.Shortcuts;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -13,7 +14,6 @@ import java.util.Collections;
 
 public class DatabaseHandler {
     private Connection connection = null;
-    private Statement statement = null;
 
     public static DatabaseHandler getInstance() {
         return Singleton.INSTANCE;
@@ -36,8 +36,6 @@ public class DatabaseHandler {
         Path dbPath = Paths.get(dbFolder.toString(), "db.sqlite3");
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath.toString());
-            statement = connection.createStatement();
-
             initialize();
         } catch (SQLException e) { }
     }
@@ -57,7 +55,9 @@ public class DatabaseHandler {
                                "receiver_name VARCHAR(20),\n" +
                                "receiver_address TEXT,\n" +
                                "sender_name VARCHAR(20),\n" +
-                               "completed INTEGER\n" +
+                               "completed INTEGER,\n" +
+                               "is_active INTEGER DEFAULT 1,\n" +
+                               "created_at VARCHAR(20)\n" +
                                ");";
 
         String parcelStatusSql = "CREATE TABLE IF NOT EXISTS parcel_status (\n" +
@@ -68,6 +68,7 @@ public class DatabaseHandler {
                                  "category VARCHAR(15)\n" +
                                  ")";
 
+        Statement statement = connection.createStatement();
         statement.execute(companyListsSql);
         statement.execute(parcelInfoSql);
         statement.execute(parcelStatusSql);
@@ -87,7 +88,7 @@ public class DatabaseHandler {
     public Company getCompany(int companyId) throws SQLException {
         Company company = null;
 
-        String sql = "SELECT * FROM company WHERE company_id = ?";
+        String sql = "SELECT * FROM company WHERE id = ?";
         PreparedStatement pstmt = connection.prepareStatement(sql);
         pstmt.setInt(1, companyId);
         ResultSet rs = pstmt.executeQuery();
@@ -113,14 +114,14 @@ public class DatabaseHandler {
     public ArrayList<Company> getCompanyList() throws SQLException {
         ArrayList<Company> companyList = new ArrayList<>();
 
-        ResultSet rs = statement.executeQuery("SELECT * FROM company");
+        ResultSet rs = connection.createStatement().executeQuery("SELECT * FROM company");
         while (rs.next()) companyList.add(new Company(rs));
 
         return companyList;
     }
 
     public ParcelInformation getParcelInformation(int parcelId) throws SQLException {
-        String sql = "SELECT * FROM parcel_information WHERE id = ?";
+        String sql = "SELECT * FROM parcel_information WHERE id = ? AND is_active = 1";
 
         PreparedStatement pstmt = connection.prepareStatement(sql);
         pstmt.setInt(1, parcelId);
@@ -128,7 +129,7 @@ public class DatabaseHandler {
 
         ParcelInformation parcel = null;
         if (rs.next()) {
-            Company company = getCompany(rs.getString("company_id"));
+            Company company = getCompany(rs.getInt("company_id"));
             ArrayList<ParcelStatus> parcelStatusList = getParcelStatusList(parcelId);
             parcel = new ParcelInformation(rs, company, parcelStatusList);
         }
@@ -136,16 +137,13 @@ public class DatabaseHandler {
         return parcel;
     }
 
-    public ArrayList<ParcelInformation> getAllParcelInformation() throws SQLException {
-        String sql = "SELECT * FROM parcel_information";
+    public ArrayList<ParcelInformation> getActiveParcels() throws SQLException {
+        String sql = "SELECT * FROM parcel_information WHERE is_active = 1";
         ArrayList<ParcelInformation> parcelList = new ArrayList<>();
 
-        ResultSet rs = statement.executeQuery(sql);
+        ResultSet rs = connection.createStatement().executeQuery(sql);
 
-        while (rs.next()) {
-            parcelList.add(new ParcelInformation(rs));
-        }
-
+        while (rs.next()) parcelList.add(new ParcelInformation(rs));
         return parcelList;
     }
 
@@ -166,8 +164,8 @@ public class DatabaseHandler {
     public void insertParcelInformation(ParcelInformation parcel) throws SQLException {
         String sql = "INSERT INTO parcel_information " +
                      "(parcel_name, company_id, invoice_number, receiver_name, " +
-                     "receiver_address, sender_name, completed)\n" +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                     "receiver_address, sender_name, completed, created_at)\n" +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         PreparedStatement pstmt = connection.prepareStatement(sql);
         pstmt.setString(1, parcel.getParcelName());
@@ -177,9 +175,10 @@ public class DatabaseHandler {
         pstmt.setString(5, parcel.getReceiverAddress());
         pstmt.setString(6, parcel.getSenderName());
         pstmt.setInt(7, parcel.isCompleted() ? 1 : 0);
+        pstmt.setString(8, Shortcuts.dateTimeToString(parcel.getCreatedAt()));
         pstmt.executeUpdate();
 
-        ResultSet rs = statement.executeQuery("SELECT id FROM parcel_information");
+        ResultSet rs = connection.createStatement().executeQuery("SELECT id FROM parcel_information");
 
         ArrayList<Integer> parcelIdList = new ArrayList<>();
         while (rs.next()) parcelIdList.add(rs.getInt("id"));
@@ -189,13 +188,20 @@ public class DatabaseHandler {
         for (ParcelStatus status:parcel.getStatusList()) insertParcelStatus(maxId, status);
     }
 
+    public void disableParcel(int parcelId) throws SQLException {
+        String sql = "UPDATE parcel_information SET is_active = 0 WHERE parcel_id = ?";
+        PreparedStatement pstmt = connection.prepareStatement(sql);
+        pstmt.setInt(1, parcelId);
+        pstmt.executeQuery();
+    }
+
     public void insertParcelStatus(int parcelId, ParcelStatus status) throws SQLException {
         String sql = "INSERT INTO parcel_status (parcel_id, status_time, location, category)\n" +
                      "VALUES (?, ?, ?, ?)";
 
         PreparedStatement pstmt = connection.prepareStatement(sql);
         pstmt.setInt(1, parcelId);
-        pstmt.setString(2, status.getTimeString());
+        pstmt.setString(2, Shortcuts.dateTimeToString(status.getStatusTime()));
         pstmt.setString(3, status.getLocation());
         pstmt.setString(4, status.getCategory());
         pstmt.executeUpdate();
@@ -212,7 +218,7 @@ public class DatabaseHandler {
             areSizesSame = originalParcel.getStatusList().size() == newParcel.getStatusList().size();
         }
 
-        if (areSizesSame || !originalParcel.isCompleted()) {
+        if (areSizesSame || originalParcel.isCompleted()) {
             // no update
         } else {
 
@@ -222,9 +228,7 @@ public class DatabaseHandler {
             }
 
             if (newParcel.isCompleted()) {
-                String sql = "UPDATE parcel_status\n" +
-                             "SET completed = 1\n" +
-                             "WHERE parcel_id = ?";
+                String sql = "UPDATE parcel_information SET completed = 1 WHERE parcel_id = ?";
                 PreparedStatement pstmt = connection.prepareStatement(sql);
                 pstmt.setInt(1, parcelId);
                 pstmt.executeUpdate();

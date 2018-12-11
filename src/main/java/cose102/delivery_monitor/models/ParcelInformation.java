@@ -2,10 +2,12 @@ package cose102.delivery_monitor.models;
 
 import com.google.gson.*;
 import cose102.delivery_monitor.db_handler.DatabaseHandler;
+import cose102.delivery_monitor.utils.Shortcuts;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ParcelInformation {
     private boolean completed;
@@ -16,6 +18,7 @@ public class ParcelInformation {
     private String senderName;
     private ArrayList<ParcelStatus> statusList = new ArrayList<>();
     private Company company;
+    private Date createdAt;
 
     public ParcelInformation(String jsonText, String companyCode) {
         JsonObject parcelObject = new JsonParser().parse(jsonText).getAsJsonObject();
@@ -35,6 +38,8 @@ public class ParcelInformation {
         } catch (SQLException e) {
             // no expected exception
         }
+
+        createdAt = new Date();
     }
 
     public ParcelInformation(ResultSet resultSet) {
@@ -45,6 +50,7 @@ public class ParcelInformation {
             receiverAddress = resultSet.getString("receiver_address");
             senderName = resultSet.getString("sender_name");
             completed = (resultSet.getInt("completed") != 0);
+            createdAt = Shortcuts.stringToDateTime(resultSet.getString("created_at"));
         } catch (SQLException e) {
             // no expected exception
         }
@@ -107,5 +113,9 @@ public class ParcelInformation {
 
     public ArrayList<ParcelStatus> getStatusList() {
         return statusList;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
     }
 }

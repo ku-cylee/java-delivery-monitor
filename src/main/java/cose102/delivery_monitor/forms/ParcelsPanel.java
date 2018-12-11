@@ -38,7 +38,7 @@ class ParcelsPanel extends JPanel {
     }
 
     private JList<ParcelInformation> getParcelsJList() throws Exception {
-        ArrayList<ParcelInformation> parcelList = DatabaseHandler.getInstance().getAllParcelInformation();
+        ArrayList<ParcelInformation> parcelList = DatabaseHandler.getInstance().getActiveParcels();
         JList<ParcelInformation> parcelJList = new JList<ParcelInformation>(getJListModel(parcelList));
         parcelJList.setBounds(10, 50, 430, 490);
         return parcelJList;
