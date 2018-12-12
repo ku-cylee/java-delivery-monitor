@@ -1,12 +1,12 @@
 package cose102.delivery_monitor.forms;
 
+import cose102.delivery_monitor.models.ParcelInformation;
 import cose102.delivery_monitor.models.ParcelStatus;
 
-import java.util.ArrayList;
 import javax.swing.*;
 
 class StatusPanel extends JPanel {
-    private JPanel headerPanel;
+    private StatusHeaderPanel headerPanel;
     private JList<ParcelStatus> statusJList;
 
     StatusPanel(MainFrame mainFrame) {
@@ -22,9 +22,10 @@ class StatusPanel extends JPanel {
         this.add(statusListPane);
     }
 
-    void refresh(ArrayList<ParcelStatus> statusList) {
+    void refresh(ParcelInformation parcel) {
+        headerPanel.displayParcelInformation(parcel);
         DefaultListModel<ParcelStatus> model = new DefaultListModel<>();
-        statusList.forEach(model::addElement);
+        parcel.getStatusList().forEach(model::addElement);
         statusJList.setModel(model);
     }
 

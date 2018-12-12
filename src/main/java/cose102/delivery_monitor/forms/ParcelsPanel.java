@@ -31,7 +31,7 @@ class ParcelsPanel extends JPanel {
 
         parcelJList.addListSelectionListener((e) -> {
             ParcelInformation parcel = ((JList<ParcelInformation>)e.getSource()).getSelectedValue();
-            mainFrame.statusPanel.refresh(parcel.getStatusList());
+            mainFrame.statusPanel.refresh(parcel);
         });
         this.add(parcelListPane);
 
