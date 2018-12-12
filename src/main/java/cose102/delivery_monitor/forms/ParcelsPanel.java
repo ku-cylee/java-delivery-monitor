@@ -9,6 +9,7 @@ import java.util.ArrayList;
 class ParcelsPanel extends JPanel {
     MainFrame mainFrame;
     JTextField keyTextField;
+    JList<ParcelInformation> parcelJList;
 
     ParcelsPanel(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
@@ -23,12 +24,16 @@ class ParcelsPanel extends JPanel {
         keyTextField.setBounds(100, 5, 340, 20);
         this.add(keyTextField);
 
-        JList<ParcelInformation> parcelJList = getParcelsJList();
+        JScrollPane parcelListPane = new JScrollPane(parcelJList = getParcelsJList());
+        parcelListPane.setBounds(10, 30, 430, 515);
+        parcelListPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        parcelListPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
         parcelJList.addListSelectionListener((e) -> {
             ParcelInformation parcel = ((JList<ParcelInformation>)e.getSource()).getSelectedValue();
             mainFrame.statusPanel.refresh(parcel.getStatusList());
         });
-        this.add(parcelJList);
+        this.add(parcelListPane);
 
         JButton addButton = createButton("Add", 10);
         JButton deleteButton = createButton("Delete", 120);
@@ -44,8 +49,7 @@ class ParcelsPanel extends JPanel {
     private JList<ParcelInformation> getParcelsJList() {
         try {
             ArrayList<ParcelInformation> parcelList = DatabaseHandler.getInstance().getActiveParcels();
-            JList<ParcelInformation> parcelJList = new JList<ParcelInformation>(getJListModel(parcelList));
-            parcelJList.setBounds(10, 30, 430, 515);
+            JList<ParcelInformation> parcelJList = new JList<>(getJListModel(parcelList));
             parcelJList.setCellRenderer(new ParcelBriefRenderer());
             return parcelJList;
         } catch (Exception e) { return null; }
