@@ -12,6 +12,14 @@ class ParcelsPanel extends JPanel {
         this.setBounds(0, 0, 450, 600);
         this.setLayout(null);
 
+        JLabel keyLabel = new JLabel("API key");
+        keyLabel.setBounds(10, 30, 110, 30);
+        this.add(keyLabel);
+
+        JTextField keyTextField = new JTextField();
+        keyTextField.setBounds(100, 35, 340, 20);
+        this.add(keyTextField);
+
         try {
             this.add(getParcelsJList());
         } catch (Exception e) {
@@ -19,17 +27,17 @@ class ParcelsPanel extends JPanel {
         }
 
         JButton addButton = new JButton("Add");
-        addButton.setBounds(10, 550, 100, 40);
-        addButton.setBackground(Constants.buttonColor);
+        addButton.setBounds(10, 555, 100, 30);
+        addButton.setBackground(Constants.BUTTON_COLOR);
         JButton deleteButton = new JButton("Delete");
-        deleteButton.setBounds(120, 550, 100, 40);
-        deleteButton.setBackground(Constants.buttonColor);
+        deleteButton.setBounds(120, 555, 100, 30);
+        deleteButton.setBackground(Constants.BUTTON_COLOR);
         JButton refreshButton = new JButton("Refresh");
-        refreshButton.setBounds(230, 550, 100, 40);
-        refreshButton.setBackground(Constants.buttonColor);
+        refreshButton.setBounds(230, 555, 100, 30);
+        refreshButton.setBackground(Constants.BUTTON_COLOR);
         JButton devButton = new JButton("Developer");
-        devButton.setBounds(340, 550, 100, 40);
-        devButton.setBackground(Constants.buttonColor);
+        devButton.setBounds(340, 555, 100, 30);
+        devButton.setBackground(Constants.BUTTON_COLOR);
 
         this.add(addButton);
         this.add(deleteButton);
@@ -40,7 +48,8 @@ class ParcelsPanel extends JPanel {
     private JList<ParcelInformation> getParcelsJList() throws Exception {
         ArrayList<ParcelInformation> parcelList = DatabaseHandler.getInstance().getActiveParcels();
         JList<ParcelInformation> parcelJList = new JList<ParcelInformation>(getJListModel(parcelList));
-        parcelJList.setBounds(10, 50, 430, 490);
+        parcelJList.setBounds(10, 60, 430, 490);
+        parcelJList.setCellRenderer(new ParcelBriefRenderer());
         return parcelJList;
     }
 
@@ -49,4 +58,6 @@ class ParcelsPanel extends JPanel {
         parcelList.forEach(model::addElement);
         return model;
     }
+
+
 }

@@ -62,27 +62,6 @@ public class ParcelInformation {
         this.statusList = statusList;
     }
 
-    @Override
-    public String toString() {
-        String result;
-        String LF = "\n";
-
-        StringBuilder statusString = new StringBuilder();
-        statusList.forEach(status -> statusString.append(LF + LF + status.toString()));
-
-        result = "============ Parcel Information ============" + LF + LF +
-                 "Parcel Name        " + parcelName + LF +
-                 "Invoice Number     " + invoiceNumber + LF +
-                 "Sender Name        " + senderName + LF +
-                 "Recipient Name     " + receiverName + LF +
-                 "Recipient Address  " + receiverAddress + LF +
-                 "Completed          " + (completed ? "Yes" : "No") + LF + LF +
-                 "Shipping Status" + statusString + LF + LF +
-                 "============================================";
-
-        return result;
-    }
-
     public boolean isCompleted() {
         return completed;
     }

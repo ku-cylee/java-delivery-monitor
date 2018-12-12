@@ -33,15 +33,6 @@ public class ParcelStatus {
         }
     }
 
-    @Override
-    public String toString() {
-        String LF = "\n";
-        String result = "## " + Shortcuts.dateTimeToString(statusTime) + LF;
-        result += String.format("## [%s] %s", category, location);
-
-        return result;
-    }
-
     public Date getStatusTime() {
         return statusTime;
     }
