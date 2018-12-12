@@ -189,10 +189,10 @@ public class DatabaseHandler {
     }
 
     public void disableParcel(int parcelId) throws SQLException {
-        String sql = "UPDATE parcel_information SET is_active = 0 WHERE parcel_id = ?";
+        String sql = "UPDATE parcel_information SET is_active = 0 WHERE id = ?";
         PreparedStatement pstmt = connection.prepareStatement(sql);
         pstmt.setInt(1, parcelId);
-        pstmt.executeQuery();
+        pstmt.executeUpdate();
     }
 
     public void insertParcelStatus(int parcelId, ParcelStatus status) throws SQLException {

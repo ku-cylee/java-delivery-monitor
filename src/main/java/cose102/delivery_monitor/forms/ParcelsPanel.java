@@ -27,7 +27,7 @@ class ParcelsPanel extends JPanel {
         parcelJList = new JList<>();
         parcelJList.setCellRenderer(new ParcelBriefRenderer());
         parcelJList.addListSelectionListener((e) -> {
-            ParcelInformation parcel = ((JList<ParcelInformation>)e.getSource()).getSelectedValue();
+            ParcelInformation parcel = parcelJList.getSelectedValue();
             mainFrame.statusPanel.refresh(parcel);
         });
         parcelJList.setModel(getModel());
@@ -45,6 +45,17 @@ class ParcelsPanel extends JPanel {
         JButton devButton = createButton("Developer", 340);
 
         addButton.addActionListener((e) -> { new AddParcelFrame(mainFrame); });
+        deleteButton.addActionListener((e) -> {
+            int deleteChoice = JOptionPane.showConfirmDialog(null, "Really delete selected parcel?",
+                                                             "Really Delete?", JOptionPane.YES_NO_OPTION);
+            if (deleteChoice == JOptionPane.YES_OPTION) {
+                try {
+                    ParcelInformation parcel = parcelJList.getSelectedValue();
+                    DatabaseHandler.getInstance().disableParcel(parcel.getId());
+                    refresh();
+                } catch (Exception exception) { };
+            }
+        });
 
         this.add(addButton);
         this.add(deleteButton);

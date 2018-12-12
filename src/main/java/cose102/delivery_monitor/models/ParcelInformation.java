@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class ParcelInformation {
+    private int id;
     private boolean completed;
     private String parcelName;
     private String invoiceNumber;
@@ -23,6 +24,7 @@ public class ParcelInformation {
     public ParcelInformation(String jsonText, String companyCode) {
         JsonObject parcelObject = new JsonParser().parse(jsonText).getAsJsonObject();
 
+        id = 0;
         parcelName = parcelObject.get("itemName").getAsString();
         invoiceNumber = parcelObject.get("invoiceNo").getAsString();
         receiverName = parcelObject.get("receiverName").getAsString();
@@ -32,18 +34,15 @@ public class ParcelInformation {
         completed = parcelObject.get("complete").getAsBoolean();
         parcelObject.get("trackingDetails").getAsJsonArray()
                     .forEach(statusElement -> statusList.add(new ParcelStatus(statusElement)));
-
         try {
             company = DatabaseHandler.getInstance().getCompany(companyCode);
-        } catch (SQLException e) {
-            // no expected exception
-        }
-
+        } catch (SQLException e) { }
         createdAt = new Date();
     }
 
     public ParcelInformation(ResultSet resultSet) {
         try {
+            id = resultSet.getInt("id");
             String tempParcelName = resultSet.getString("parcel_name");
             parcelName = tempParcelName.equals("") ? "No Parcel Name" : tempParcelName;
             invoiceNumber = resultSet.getString("invoice_number");
@@ -59,6 +58,10 @@ public class ParcelInformation {
         } catch (SQLException e) {
             // no expected exception
         }
+    }
+
+    public int getId() {
+        return id;
     }
 
     public boolean isCompleted() {
