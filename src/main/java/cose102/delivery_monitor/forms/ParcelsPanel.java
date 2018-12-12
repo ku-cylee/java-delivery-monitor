@@ -43,7 +43,7 @@ class ParcelsPanel extends JPanel {
         JButton addButton = createButton("Add", 10);
         JButton deleteButton = createButton("Delete", 120);
         JButton refreshButton = createButton("Refresh", 230);
-        JButton devButton = createButton("Developer", 340);
+        JButton reloadCompaniesButton = createButton("Load Companies", 340);
 
         addButton.addActionListener((e) -> { new AddParcelFrame(mainFrame); });
         deleteButton.addActionListener((e) -> {
@@ -72,11 +72,19 @@ class ParcelsPanel extends JPanel {
                 refresh();
             }
         });
+        reloadCompaniesButton.addActionListener((e) -> {
+            try {
+                ParcelRetriever retriever = new ParcelRetriever(keyTextField.getText());
+                DatabaseHandler.getInstance().refreshCompanyLists(retriever.getCompanyData());
+            } catch (Exception exception) {
+                JOptionPane.showMessageDialog(this, "Loading company data failed!");
+            }
+        });
 
         this.add(addButton);
         this.add(deleteButton);
         this.add(refreshButton);
-        this.add(devButton);
+        this.add(reloadCompaniesButton);
     }
 
     private DefaultListModel<ParcelInformation> getModel() {

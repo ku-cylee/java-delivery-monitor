@@ -5,6 +5,7 @@ import cose102.delivery_monitor.utils.Shortcuts;
 
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 class StatusHeaderPanel extends JPanel {
     private JLabel parcelNameLabel = new JLabel();
@@ -19,6 +20,7 @@ class StatusHeaderPanel extends JPanel {
         this.setBounds(10, 5, 430, 150);
         this.setOpaque(true);
         this.setBackground(Color.WHITE);
+        this.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         this.setLayout(new GridLayout(7, 1));
 

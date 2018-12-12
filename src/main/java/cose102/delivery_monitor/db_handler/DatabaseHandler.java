@@ -20,7 +20,7 @@ public class DatabaseHandler {
     }
 
     private static class Singleton {
-        public static final DatabaseHandler INSTANCE = new DatabaseHandler();
+        static final DatabaseHandler INSTANCE = new DatabaseHandler();
     }
 
     private DatabaseHandler() {
@@ -36,7 +36,6 @@ public class DatabaseHandler {
         Path dbPath = Paths.get(dbFolder.toString(), "db.sqlite3");
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath.toString());
-            initialize();
         } catch (SQLException e) { }
     }
 
@@ -74,7 +73,9 @@ public class DatabaseHandler {
         statement.execute(parcelStatusSql);
     }
 
-    public void insertCompanyLists(ArrayList<Company> companyList) throws SQLException {
+    public void refreshCompanyLists(ArrayList<Company> companyList) throws SQLException {
+        connection.createStatement().execute("DELETE FROM company");
+
         String sql = "INSERT INTO company (code, company) VALUES (?, ?)";
 
         for (Company company:companyList) {
