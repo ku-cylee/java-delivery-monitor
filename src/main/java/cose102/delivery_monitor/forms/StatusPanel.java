@@ -1,10 +1,18 @@
 package cose102.delivery_monitor.forms;
 
+import java.awt.*;
 import javax.swing.*;
 
-public class StatusPanel extends JPanel {
-    public StatusPanel(MainFrame mainFrame) {
-        this.setBounds(450, 0, 450, 600);
+class StatusPanel extends JPanel {
+    MainFrame mainFrame;
+
+    StatusPanel(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+        this.setBounds(445, 30, 450, 600);
         this.setLayout(null);
+
+        JPanel headerPanel = new StatusHeaderPanel();
+
+        this.add(headerPanel);
     }
 }

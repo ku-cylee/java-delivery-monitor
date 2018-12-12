@@ -10,7 +10,7 @@ import java.awt.*;
 class ParcelBriefRenderer extends JPanel implements ListCellRenderer<ParcelInformation> {
     private JLabel nameLabel = new JLabel();
     private JLabel dateLabel = new JLabel();
-    private JLabel senderLabel = new JLabel();
+    private JLabel companyLabel = new JLabel();
 
     ParcelBriefRenderer() {
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -18,7 +18,7 @@ class ParcelBriefRenderer extends JPanel implements ListCellRenderer<ParcelInfor
 
         this.add(nameLabel);
         this.add(dateLabel);
-        this.add(senderLabel);
+        this.add(companyLabel);
     }
 
     @Override
@@ -26,17 +26,17 @@ class ParcelBriefRenderer extends JPanel implements ListCellRenderer<ParcelInfor
                                                   ParcelInformation parcel, int index, boolean isSelected, boolean cellHasFocus) {
         nameLabel.setText(parcel.getParcelName().equals("") ? "No Title" : parcel.getParcelName());
         dateLabel.setText(Shortcuts.dateTimeToString(parcel.getCreatedAt()));
-        senderLabel.setText(parcel.getSenderName());
+        companyLabel.setText(parcel.getCompany().getCompanyName());
 
-        JLabel[] labels = { nameLabel, dateLabel, senderLabel };
+        JLabel[] labels = { nameLabel, dateLabel, companyLabel};
 
         nameLabel.setOpaque(true);
         dateLabel.setOpaque(true);
-        senderLabel.setOpaque(true);
+        companyLabel.setOpaque(true);
 
         nameLabel.setFont(Constants.getFont(Font.BOLD, 15));
         dateLabel.setFont(Constants.getFont());
-        senderLabel.setFont(Constants.getFont());
+        companyLabel.setFont(Constants.getFont());
 
         setCellColor(isSelected ? list.getSelectionBackground() : list.getBackground());
 
@@ -46,7 +46,7 @@ class ParcelBriefRenderer extends JPanel implements ListCellRenderer<ParcelInfor
     private void setCellColor(Color color) {
         nameLabel.setBackground(color);
         dateLabel.setBackground(color);
-        senderLabel.setBackground(color);
+        companyLabel.setBackground(color);
         this.setBackground(color);
     }
 }

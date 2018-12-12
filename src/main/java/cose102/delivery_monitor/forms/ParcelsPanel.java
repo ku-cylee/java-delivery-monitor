@@ -3,28 +3,32 @@ package cose102.delivery_monitor.forms;
 import cose102.delivery_monitor.db_handler.DatabaseHandler;
 import cose102.delivery_monitor.models.ParcelInformation;
 
+import java.awt.*;
 import javax.swing.*;
 import java.util.ArrayList;
 
 class ParcelsPanel extends JPanel {
+    MainFrame mainFrame;
+    JTextField keyTextField;
 
     ParcelsPanel(MainFrame mainFrame) {
-        this.setBounds(0, 0, 450, 600);
+        this.mainFrame = mainFrame;
+        this.setBounds(5, 30, 450, 600);
         this.setLayout(null);
 
         JLabel keyLabel = new JLabel("API key");
-        keyLabel.setBounds(10, 30, 110, 30);
+        keyLabel.setBounds(10, 0, 110, 30);
         this.add(keyLabel);
 
-        JTextField keyTextField = new JTextField();
-        keyTextField.setBounds(100, 35, 340, 20);
+        keyTextField = new JTextField();
+        keyTextField.setBounds(100, 5, 340, 20);
         this.add(keyTextField);
 
-        try {
-            this.add(getParcelsJList());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+        JList<ParcelInformation> parcelJList = getParcelsJList();
+        parcelJList.addListSelectionListener((e) -> {
+            ParcelInformation parcel = ((JList<ParcelInformation>)e.getSource()).getSelectedValue();
+        });
+        this.add(parcelJList);
 
         JButton addButton = new JButton("Add");
         addButton.setBounds(10, 555, 100, 30);
@@ -45,12 +49,14 @@ class ParcelsPanel extends JPanel {
         this.add(devButton);
     }
 
-    private JList<ParcelInformation> getParcelsJList() throws Exception {
-        ArrayList<ParcelInformation> parcelList = DatabaseHandler.getInstance().getActiveParcels();
-        JList<ParcelInformation> parcelJList = new JList<ParcelInformation>(getJListModel(parcelList));
-        parcelJList.setBounds(10, 60, 430, 490);
-        parcelJList.setCellRenderer(new ParcelBriefRenderer());
-        return parcelJList;
+    private JList<ParcelInformation> getParcelsJList() {
+        try {
+            ArrayList<ParcelInformation> parcelList = DatabaseHandler.getInstance().getActiveParcels();
+            JList<ParcelInformation> parcelJList = new JList<ParcelInformation>(getJListModel(parcelList));
+            parcelJList.setBounds(10, 30, 430, 515);
+            parcelJList.setCellRenderer(new ParcelBriefRenderer());
+            return parcelJList;
+        } catch (Exception e) { return null; }
     }
 
     private DefaultListModel<ParcelInformation> getJListModel(ArrayList<ParcelInformation> parcelList) {
@@ -58,6 +64,4 @@ class ParcelsPanel extends JPanel {
         parcelList.forEach(model::addElement);
         return model;
     }
-
-
 }

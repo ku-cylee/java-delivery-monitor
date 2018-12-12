@@ -131,7 +131,7 @@ public class DatabaseHandler {
         if (rs.next()) {
             Company company = getCompany(rs.getInt("company_id"));
             ArrayList<ParcelStatus> parcelStatusList = getParcelStatusList(parcelId);
-            parcel = new ParcelInformation(rs, company, parcelStatusList);
+            parcel = new ParcelInformation(rs);
         }
 
         return parcel;
@@ -147,7 +147,7 @@ public class DatabaseHandler {
         return parcelList;
     }
 
-    private ArrayList<ParcelStatus> getParcelStatusList(int parcelId) throws SQLException {
+    public ArrayList<ParcelStatus> getParcelStatusList(int parcelId) throws SQLException {
         ArrayList<ParcelStatus> statusList = new ArrayList<>();
 
         String sql = "SELECT * FROM parcel_status WHERE parcel_id = ?";

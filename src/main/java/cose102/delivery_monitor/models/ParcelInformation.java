@@ -51,15 +51,13 @@ public class ParcelInformation {
             senderName = resultSet.getString("sender_name");
             completed = (resultSet.getInt("completed") != 0);
             createdAt = Shortcuts.stringToDateTime(resultSet.getString("created_at"));
+
+            DatabaseHandler dbHandler = DatabaseHandler.getInstance();
+            company = dbHandler.getCompany(resultSet.getInt("company_id"));
+            statusList = dbHandler.getParcelStatusList(resultSet.getInt("id"));
         } catch (SQLException e) {
             // no expected exception
         }
-    }
-
-    public ParcelInformation(ResultSet rs, Company company, ArrayList<ParcelStatus> statusList) {
-        this(rs);
-        this.company = company;
-        this.statusList = statusList;
     }
 
     public boolean isCompleted() {
