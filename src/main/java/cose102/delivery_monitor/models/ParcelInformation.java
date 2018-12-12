@@ -44,7 +44,8 @@ public class ParcelInformation {
 
     public ParcelInformation(ResultSet resultSet) {
         try {
-            parcelName = resultSet.getString("parcel_name");
+            String tempParcelName = resultSet.getString("parcel_name");
+            parcelName = tempParcelName.equals("") ? "No Parcel Name" : tempParcelName;
             invoiceNumber = resultSet.getString("invoice_number");
             receiverName = resultSet.getString("receiver_name");
             receiverAddress = resultSet.getString("receiver_address");

@@ -23,12 +23,10 @@ class ParcelBriefRenderer extends JPanel implements ListCellRenderer<ParcelInfor
 
     @Override
     public Component getListCellRendererComponent(JList<? extends ParcelInformation> list,
-                                                  ParcelInformation parcel, int index, boolean isSelected, boolean cellHasFocus) {
-        nameLabel.setText(parcel.getParcelName().equals("") ? "No Title" : parcel.getParcelName());
+                     ParcelInformation parcel, int index, boolean isSelected, boolean cellHasFocus) {
+        nameLabel.setText(parcel.getParcelName());
         dateLabel.setText(Shortcuts.dateTimeToString(parcel.getCreatedAt()));
         companyLabel.setText(parcel.getCompany().getCompanyName());
-
-        JLabel[] labels = { nameLabel, dateLabel, companyLabel};
 
         nameLabel.setOpaque(true);
         dateLabel.setOpaque(true);

@@ -4,8 +4,8 @@ import java.awt.*;
 import javax.swing.*;
 
 public class MainFrame extends JFrame {
-    public JPanel parcelsPanel;
-    public JPanel statusPanel;
+    public ParcelsPanel parcelsPanel;
+    public StatusPanel statusPanel;
 
     public MainFrame() {
         this.setTitle("Delivery Monitor");

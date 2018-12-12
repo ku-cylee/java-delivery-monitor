@@ -3,7 +3,6 @@ package cose102.delivery_monitor.forms;
 import cose102.delivery_monitor.db_handler.DatabaseHandler;
 import cose102.delivery_monitor.models.ParcelInformation;
 
-import java.awt.*;
 import javax.swing.*;
 import java.util.ArrayList;
 
@@ -27,21 +26,14 @@ class ParcelsPanel extends JPanel {
         JList<ParcelInformation> parcelJList = getParcelsJList();
         parcelJList.addListSelectionListener((e) -> {
             ParcelInformation parcel = ((JList<ParcelInformation>)e.getSource()).getSelectedValue();
+            mainFrame.statusPanel.refresh(parcel.getStatusList());
         });
         this.add(parcelJList);
 
-        JButton addButton = new JButton("Add");
-        addButton.setBounds(10, 555, 100, 30);
-        addButton.setBackground(Constants.BUTTON_COLOR);
-        JButton deleteButton = new JButton("Delete");
-        deleteButton.setBounds(120, 555, 100, 30);
-        deleteButton.setBackground(Constants.BUTTON_COLOR);
-        JButton refreshButton = new JButton("Refresh");
-        refreshButton.setBounds(230, 555, 100, 30);
-        refreshButton.setBackground(Constants.BUTTON_COLOR);
-        JButton devButton = new JButton("Developer");
-        devButton.setBounds(340, 555, 100, 30);
-        devButton.setBackground(Constants.BUTTON_COLOR);
+        JButton addButton = createButton("Add", 10);
+        JButton deleteButton = createButton("Delete", 120);
+        JButton refreshButton = createButton("Refresh", 230);
+        JButton devButton = createButton("Developer", 340);
 
         this.add(addButton);
         this.add(deleteButton);
@@ -63,5 +55,12 @@ class ParcelsPanel extends JPanel {
         DefaultListModel<ParcelInformation> model = new DefaultListModel<>();
         parcelList.forEach(model::addElement);
         return model;
+    }
+
+    private JButton createButton(String text, int xCoordinate) {
+        JButton button = new JButton(text);
+        button.setBounds(xCoordinate, 555, 100, 30);
+        button.setBackground(Constants.BUTTON_COLOR);
+        return button;
     }
 }
