@@ -32,6 +32,16 @@ class StatusHeaderPanel extends JPanel {
         for(JLabel label:labels) this.add(label);
     }
 
+    void clear() {
+        parcelNameLabel.setText("");
+        createdAtLabel.setText("");
+        invoiceLabel.setText("");
+        senderNameLabel.setText("");
+        receiverNameLabel.setText("");
+        receiverAddressLabel.setText("");
+        completedLabel.setText("");
+    }
+
     void displayParcelInformation(ParcelInformation parcel) {
         parcelNameLabel.setText(parcel.getParcelName());
         createdAtLabel.setText("Registered: " + Shortcuts.dateTimeToString(parcel.getCreatedAt()));

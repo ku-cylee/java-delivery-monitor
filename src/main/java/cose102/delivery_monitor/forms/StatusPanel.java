@@ -22,11 +22,18 @@ class StatusPanel extends JPanel {
         this.add(statusListPane);
     }
 
+    void clear() {
+        headerPanel.clear();
+        statusJList.setModel(new DefaultListModel<>());
+    }
+
     void refresh(ParcelInformation parcel) {
-        headerPanel.displayParcelInformation(parcel);
-        DefaultListModel<ParcelStatus> model = new DefaultListModel<>();
-        parcel.getStatusList().forEach(model::addElement);
-        statusJList.setModel(model);
+        if (parcel != null) {
+            headerPanel.displayParcelInformation(parcel);
+            DefaultListModel<ParcelStatus> model = new DefaultListModel<>();
+            parcel.getStatusList().forEach(model::addElement);
+            statusJList.setModel(model);
+        }
     }
 
     private JList<ParcelStatus> getStatusJList() {

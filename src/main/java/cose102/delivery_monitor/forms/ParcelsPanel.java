@@ -2,6 +2,7 @@ package cose102.delivery_monitor.forms;
 
 import cose102.delivery_monitor.db_handler.DatabaseHandler;
 import cose102.delivery_monitor.models.ParcelInformation;
+import cose102.delivery_monitor.utils.ParcelRetriever;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -56,6 +57,21 @@ class ParcelsPanel extends JPanel {
                 } catch (Exception exception) { };
             }
         });
+        refreshButton.addActionListener((e) -> {
+            try {
+                DatabaseHandler dbHandler = DatabaseHandler.getInstance();
+                ParcelRetriever retriever = new ParcelRetriever(keyTextField.getText());
+                for(ParcelInformation parcel:dbHandler.getActiveParcels()) {
+                    ParcelInformation updatedParcel = retriever.getParcelInformation(
+                            parcel.getCompany().getCompanyCode(), parcel.getInvoiceNumber());
+                    dbHandler.updateParcelStatus(parcel.getId(), updatedParcel);
+                }
+            } catch (Exception exception) {
+                JOptionPane.showMessageDialog(this, "Refreshing parcel data failed!");
+            } finally {
+                refresh();
+            }
+        });
 
         this.add(addButton);
         this.add(deleteButton);
@@ -82,5 +98,6 @@ class ParcelsPanel extends JPanel {
 
     void refresh() {
         parcelJList.setModel(getModel());
+        mainFrame.statusPanel.clear();
     }
 }

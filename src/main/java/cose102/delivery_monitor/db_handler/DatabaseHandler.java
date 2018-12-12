@@ -228,7 +228,7 @@ public class DatabaseHandler {
             }
 
             if (newParcel.isCompleted()) {
-                String sql = "UPDATE parcel_information SET completed = 1 WHERE parcel_id = ?";
+                String sql = "UPDATE parcel_information SET completed = 1 WHERE id = ?";
                 PreparedStatement pstmt = connection.prepareStatement(sql);
                 pstmt.setInt(1, parcelId);
                 pstmt.executeUpdate();
