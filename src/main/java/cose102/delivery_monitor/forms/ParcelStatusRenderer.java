@@ -31,7 +31,7 @@ class ParcelStatusRenderer extends JPanel implements ListCellRenderer<ParcelStat
         dateLabel.setFont(Constants.getFont());
         statusLabel.setFont(Constants.getFont());
 
-        setCellColor(isSelected ? list.getSelectionBackground() : list.getBackground());
+        setCellColor(isSelected ? Constants.SELECTED_COLOR : Constants.UNSELECTED_COLOR);
 
         return this;
     }

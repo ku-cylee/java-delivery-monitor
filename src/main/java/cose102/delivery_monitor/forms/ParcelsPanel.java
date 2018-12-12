@@ -9,7 +9,7 @@ import java.util.ArrayList;
 class ParcelsPanel extends JPanel {
     MainFrame mainFrame;
     JTextField keyTextField;
-    JList<ParcelInformation> parcelJList;
+    private JList<ParcelInformation> parcelJList;
 
     ParcelsPanel(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
@@ -24,15 +24,19 @@ class ParcelsPanel extends JPanel {
         keyTextField.setBounds(100, 5, 340, 20);
         this.add(keyTextField);
 
-        JScrollPane parcelListPane = new JScrollPane(parcelJList = getParcelsJList());
-        parcelListPane.setBounds(10, 30, 430, 515);
-        parcelListPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        parcelListPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
+        parcelJList = new JList<>();
+        parcelJList.setCellRenderer(new ParcelBriefRenderer());
         parcelJList.addListSelectionListener((e) -> {
             ParcelInformation parcel = ((JList<ParcelInformation>)e.getSource()).getSelectedValue();
             mainFrame.statusPanel.refresh(parcel);
         });
+        parcelJList.setModel(getModel());
+
+        JScrollPane parcelListPane = new JScrollPane(parcelJList);
+        parcelListPane.setBounds(10, 30, 430, 515);
+        parcelListPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        parcelListPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
         this.add(parcelListPane);
 
         JButton addButton = createButton("Add", 10);
@@ -40,31 +44,32 @@ class ParcelsPanel extends JPanel {
         JButton refreshButton = createButton("Refresh", 230);
         JButton devButton = createButton("Developer", 340);
 
+        addButton.addActionListener((e) -> { new AddParcelFrame(mainFrame); });
+
         this.add(addButton);
         this.add(deleteButton);
         this.add(refreshButton);
         this.add(devButton);
     }
 
-    private JList<ParcelInformation> getParcelsJList() {
+    private DefaultListModel<ParcelInformation> getModel() {
         try {
             ArrayList<ParcelInformation> parcelList = DatabaseHandler.getInstance().getActiveParcels();
-            JList<ParcelInformation> parcelJList = new JList<>(getJListModel(parcelList));
-            parcelJList.setCellRenderer(new ParcelBriefRenderer());
-            return parcelJList;
+            DefaultListModel<ParcelInformation> model = new DefaultListModel<>();
+            parcelList.forEach(model::addElement);
+            return model;
         } catch (Exception e) { return null; }
-    }
-
-    private DefaultListModel<ParcelInformation> getJListModel(ArrayList<ParcelInformation> parcelList) {
-        DefaultListModel<ParcelInformation> model = new DefaultListModel<>();
-        parcelList.forEach(model::addElement);
-        return model;
     }
 
     private JButton createButton(String text, int xCoordinate) {
         JButton button = new JButton(text);
         button.setBounds(xCoordinate, 555, 100, 30);
         button.setBackground(Constants.BUTTON_COLOR);
+        button.setFont(Constants.getFont());
         return button;
+    }
+
+    void refresh() {
+        parcelJList.setModel(getModel());
     }
 }

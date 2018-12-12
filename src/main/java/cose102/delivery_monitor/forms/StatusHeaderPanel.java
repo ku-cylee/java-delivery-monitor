@@ -34,11 +34,12 @@ class StatusHeaderPanel extends JPanel {
 
     void displayParcelInformation(ParcelInformation parcel) {
         parcelNameLabel.setText(parcel.getParcelName());
-        createdAtLabel.setText(Shortcuts.dateTimeToString(parcel.getCreatedAt()));
-        invoiceLabel.setText(String.format("%s | %s", parcel.getCompany().getCompanyName(), parcel.getInvoiceNumber()));
-        senderNameLabel.setText(parcel.getSenderName());
-        receiverNameLabel.setText(parcel.getReceiverName());
-        receiverAddressLabel.setText(parcel.getReceiverAddress());
+        createdAtLabel.setText("Registered: " + Shortcuts.dateTimeToString(parcel.getCreatedAt()));
+        invoiceLabel.setText("Invoice Number: " +
+                String.format("%s | %s", parcel.getCompany().getCompanyName(), parcel.getInvoiceNumber()));
+        senderNameLabel.setText("Sender: " + parcel.getSenderName());
+        receiverNameLabel.setText("Receiver: " + parcel.getReceiverName());
+        receiverAddressLabel.setText("Address: " + parcel.getReceiverAddress());
         completedLabel.setText(parcel.isCompleted() ? "Completed" : "Incomplete");
     }
 }
