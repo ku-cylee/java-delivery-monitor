@@ -20,12 +20,17 @@ class AddParcelFrame extends JFrame {
         Container container = this.getContentPane();
         container.setLayout(null);
 
-        try {
-            ArrayList<Company> companyList = DatabaseHandler.getInstance().getCompanyList();
+        ArrayList<Company> companyList = new ArrayList<>();
 
+        try {
+            companyList = DatabaseHandler.getInstance().getCompanyList();
+        } catch (Exception e) { }
+
+        if (companyList.size() > 0) {
             JLabel companyLabel = new JLabel("Company");
             companyLabel.setBounds(20, 10, 80, 30);
             companyLabel.setFont(Constants.getFont());
+
 
             companyComboBox = new JComboBox<Company>(getModel(companyList));
             companyComboBox.setRenderer(new CompanyComboBoxRenderer());
@@ -75,16 +80,18 @@ class AddParcelFrame extends JFrame {
             this.setResizable(false);
             this.setSize(400, 150);
             this.setVisible(true);
-        } catch (Exception e) { }
+        } else {
+            JOptionPane.showMessageDialog(this, "Company data is not loaded");
+        }
     }
 
-    DefaultComboBoxModel<Company> getModel(ArrayList<Company> companyList) {
+    private DefaultComboBoxModel<Company> getModel(ArrayList<Company> companyList) {
         DefaultComboBoxModel<Company> model = new DefaultComboBoxModel<>();
         companyList.forEach(model::addElement);
         return model;
     }
 
-    void close() {
+    private void close() {
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 
