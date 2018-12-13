@@ -7,7 +7,7 @@ delivery-monitor is a graphical user interface (GUI) application written in Java
 - Maven: The version of Maven installed on your computer must be newer than 3.6.0. Download Maven from [here](https://maven.apache.org/download.cgi) and follow the [installation guides](https://maven.apache.org/install.html).
 
 ### Installation
-Download delivery-monitor .jar file by downloading the [latest release](https://github.com/cylee-for-kuniv/cose102-delivery-monitor/releases/tag/1.0.0).
+Download delivery-monitor .jar file by downloading the [latest release](https://github.com/cylee-for-kuniv/cose102-delivery-monitor/releases/tag/1.0.1).
 
 You may also download the source code and build yourself. 
 
@@ -17,7 +17,7 @@ To build the project, on the root directory of project folder, execute:
 
 To run the program:
 
-<pre><code>$ java -cp target/delivery_monitor-1.0.0-jar-with-dependencies.jar cose102.delivery_monitor.main.Main</code></pre>
+<pre><code>$ java -cp target/delivery_monitor-1.0.1-jar-with-dependencies.jar cose102.delivery_monitor.main.Main</code></pre>
 
 ### Usage
 
