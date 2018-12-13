@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class ParcelRetriever {
@@ -40,7 +41,8 @@ public class ParcelRetriever {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
 
-        BufferedReader bReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        BufferedReader bReader = new BufferedReader(
+                new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
         String inputLine;
         StringBuilder response = new StringBuilder();
         while ((inputLine = bReader.readLine()) != null) response.append(inputLine);
