@@ -11,14 +11,10 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 class AddParcelFrame extends JFrame {
-    private MainFrame mainFrame;
-
     private JComboBox<Company> companyComboBox;
     private JTextField invoiceTextField;
 
     AddParcelFrame(MainFrame mainFrame) {
-        this.mainFrame = mainFrame;
-
         this.setTitle("Add Parcel");
 
         Container container = this.getContentPane();

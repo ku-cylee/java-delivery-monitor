@@ -121,7 +121,7 @@ public class DatabaseHandler {
         return companyList;
     }
 
-    public ParcelInformation getParcelInformation(int parcelId) throws SQLException {
+    private ParcelInformation getParcelInformation(int parcelId) throws SQLException {
         String sql = "SELECT * FROM parcel_information WHERE id = ? AND is_active = 1";
 
         PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -211,18 +211,8 @@ public class DatabaseHandler {
     public void updateParcelStatus(int parcelId, ParcelInformation newParcel) throws SQLException {
         ParcelInformation originalParcel = getParcelInformation(parcelId);
 
-        boolean areSizesSame = false;
-
-        if (originalParcel == null) {
-            // such parcel does not exist
-        } else {
-            areSizesSame = originalParcel.getStatusList().size() == newParcel.getStatusList().size();
-        }
-
-        if (areSizesSame || originalParcel.isCompleted()) {
-            // no update
-        } else {
-
+        boolean areSizesSame = originalParcel.getStatusList().size() == newParcel.getStatusList().size();
+        if (!areSizesSame && !originalParcel.isCompleted()) {
             for (int idx = originalParcel.getStatusList().size(); idx < newParcel.getStatusList().size(); idx++) {
                 ParcelStatus status = newParcel.getStatusList().get(idx);
                 insertParcelStatus(parcelId, status);

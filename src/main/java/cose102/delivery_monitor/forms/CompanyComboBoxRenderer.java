@@ -16,11 +16,7 @@ class CompanyComboBoxRenderer extends JLabel implements ListCellRenderer<Company
                      Company company, int index, boolean isSelected, boolean cellHasFocus) {
         this.setText(company.getCompanyName());
 
-        setCellColor(isSelected ? Constants.SELECTED_COLOR : Constants.UNSELECTED_COLOR);
+        this.setBackground(isSelected ? Constants.SELECTED_COLOR : Constants.UNSELECTED_COLOR);
         return this;
-    }
-
-    private void setCellColor(Color color) {
-        this.setBackground(color);
     }
 }

@@ -55,9 +55,7 @@ public class ParcelInformation {
             DatabaseHandler dbHandler = DatabaseHandler.getInstance();
             company = dbHandler.getCompany(resultSet.getInt("company_id"));
             statusList = dbHandler.getParcelStatusList(resultSet.getInt("id"));
-        } catch (SQLException e) {
-            // no expected exception
-        }
+        } catch (SQLException e) { }
     }
 
     public int getId() {

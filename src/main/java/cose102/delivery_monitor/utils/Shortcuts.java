@@ -12,7 +12,7 @@ public class Shortcuts {
         try {
             return new SimpleDateFormat(dateTimeFormat, Locale.KOREA).parse(string);
         } catch (ParseException e) {
-            return new Date(1970, 1, 1); // no expected exception, just for compile error
+            return null;
         }
     }
 

@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 
 class ParcelsPanel extends JPanel {
-    MainFrame mainFrame;
+    private MainFrame mainFrame;
     JTextField keyTextField;
     private JList<ParcelInformation> parcelJList;
 

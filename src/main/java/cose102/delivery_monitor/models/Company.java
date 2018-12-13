@@ -16,9 +16,7 @@ public class Company {
             id = resultSet.getInt("id");
             companyCode = resultSet.getString("code");
             companyName = resultSet.getString("company");
-        } catch (SQLException e) {
-            // No expected exception
-        }
+        } catch (SQLException e) { }
     }
 
     public Company(JsonElement jsonElement) {
