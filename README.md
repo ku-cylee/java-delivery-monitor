@@ -51,7 +51,8 @@ Clicking "Refresh" button refreshes all existing active parcel data. It makes th
 
 ### Documentation and Live Demo
 
-You can check documentation [here](https://drive.google.com/open?id=1GpJppDpYCSM3rhghUtUYIJTHq9tcQQQh) and live demo video [here](https://drive.google.com/open?id=1DW_8yUV9zBUqSER105pWaaaAKQgBjqC3).
+- You can check plan paper [here](https://drive.google.com/open?id=1IU-jh8RgiEkJKWn6oLtDjTTjp8i-qf0N) and report paper [here](https://drive.google.com/open?id=1GpJppDpYCSM3rhghUtUYIJTHq9tcQQQh). 
+- You can view live demo video [here](https://drive.google.com/open?id=1DW_8yUV9zBUqSER105pWaaaAKQgBjqC3).
 
 ### Limitations
 
